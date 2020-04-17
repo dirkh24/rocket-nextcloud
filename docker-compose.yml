@@ -2,7 +2,7 @@ version: '3'
 
 services:
   traefik:
-    image: traefik:latest
+    image: traefik:v1.7.24
     restart: always
     ports:
       - 80:80
@@ -71,14 +71,14 @@ services:
       - "traefik.basic.protocol=http"
       - "traefik.backend=rocketchat"
   mongo:
-    image: mongo:3.2
+    image: mongo:3.4
     restart: unless-stopped
     command: mongod --smallfiles --oplogSize 128 --replSet rs0
     volumes:
       - ./data/chat/db:/data/db
       - ./data/chat/backups:/dump
   mongo-init-replica:
-    image: mongo:3.2
+    image: mongo:3.4
     command: 'mongo mongo/rocketchat --eval "rs.initiate({ _id: ''rs0'', members: [ { _id: 0, host: ''localhost:27017'' } ]})"'
     depends_on:
       - mongo
